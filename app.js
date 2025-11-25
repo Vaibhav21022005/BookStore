@@ -11,13 +11,21 @@ const favouriteRoutes = require("./routes/favourite");
 const cartRoutes = require("./routes/cart");
 const orderRoutes = require("./routes/order");
 
-app.use(
-  cors({
-    origin: "https://bookstore-x6ph.onrender.com",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-  })
-);
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://singular-cobbler-9ca7f0.netlify.app"
+];
+
+app.use(cors({
+  origin: function(origin, callback) {
+    if (!origin) return callback(null, true); // allow Postman, server requests
+    if (allowedOrigins.includes(origin)) callback(null, true);
+    else callback(new Error("CORS not allowed"));
+  },
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
+
 
 app.use(express.json());
 
